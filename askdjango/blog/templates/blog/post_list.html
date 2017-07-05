@@ -8,7 +8,23 @@
 <body>
 <h1>askdjango</h1>  
 
-<p>ksdmflksdmf;sdfs</p>
+<p>이마트에 쌀가격 크롤링 해오기</p>
+
+{% for emart in emarts %}
+          <table border='1'>
+            <tr>
+                <th> 쌀 이름 </th>
+                <th> 가격    </th>
+            </tr>
+            <tr>  
+            <td>{{ emart.title }} </td>
+            <td>{{ emart.price }} 원</td>
+            <tr>
+          </table>
+            
+        
+        
+{% endfor %}
 </body>
 </html>
 
