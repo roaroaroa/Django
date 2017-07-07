@@ -79,12 +79,13 @@ WSGI_APPLICATION = 'askdjango.wsgi.application'
 
 DATABASES = {
     'default': {
-          'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'practicedb',
         'USER': 'root',
         'PASSWORD':'0000',
         'HOST':'localhost',
         'PORT':'3306',
+        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
     }
 }
 
