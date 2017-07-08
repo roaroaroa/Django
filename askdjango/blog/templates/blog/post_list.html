@@ -4,60 +4,36 @@
 <meta charset='utf-8' />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
 <title>AskDjango</title>
+
+
 </head>
 <body>
-<h1>askdjango</h1>  
 
-<p>이마트에 쌀가격 크롤링 해오기</p>
+<h1>한이음 프로젝트</h1>  
 
+<p><h3>이마트 쌀 물품 목록</h3></p><br><br>
+
+-------------------------------
+       
+  
+<br><br>
 {% for emart in emarts %}
+         <div  > 
           <table border='1'>
             <tr>
                 <th> 쌀 이름 </th>
                 <th> 가격    </th>
+               
             </tr>
             <tr>  
-            <td>{{ emart.title }} </td>
-            <td>{{ emart.price }} 원</td>
-            <tr>
+                <td>{{ emart.title }} </td>
+                <td>{{ emart.price }} 원</td>
+            </tr>
           </table>
-            
-        
-        
+         </div>
 {% endfor %}
+------------------------------------------------
+       
+        
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

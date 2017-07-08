@@ -20,9 +20,13 @@ class Emart(models.Model):
     title= models.CharField(max_length=100, blank=True)
     price=models.CharField(max_length=20, blank=True)
 
-    def __str__(self):
-       return self.title
-    
+class Handling(models.Model):
+    title= models.CharField(max_length=300) 
+    max_value=models.CharField(max_length=300,blank=True)
+    title1= models.CharField(max_length=300) 
+    min_value=models.CharField(max_length=300,blank=True)
 
 
-
+class Discount(models.Model):
+    title=models.CharField(max_length=100, blank=True)
+    discount=models.CharField(max_length=100, blank=True)
