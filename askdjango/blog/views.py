@@ -26,3 +26,6 @@ def handling(request):
     context = {'handlings': handlings}
     return render(request, 'blog/handling.html',context)
 
+def factor(request):
+    return render(request, 'blog/factor.html')
+
