@@ -18,10 +18,12 @@ soup = BeautifulSoup(html, 'html.parser')
 
 one=[]
 two=[]
+none=[]
 
 
 for title in soup.select('span.subject'):
      one.append(title.text)
+
      #print(title.text)
    
 
@@ -41,3 +43,26 @@ for x in range(len(one)):
 
 conn.commit()
 conn.close()
+
+# 1분마다 주기적으로 받아오기
+'''
+import time
+import logging
+import requests
+from bs4 import BeautifulSoup
+
+def parse():
+     req = requests.get('http://www.ssg.com/search.ssg?target=all&query=%EC%8C%80')
+     html = req.text
+     soup = BeautifulSoup(html, 'html.parser')
+     for title in soup.select('span.subject'):
+     print(price.text)
+     print("------------------------------")
+
+while True:
+    logging.info('start parsing')
+    parse()
+    logging.info('parsing ends')
+    logging.info('sleep in 60s')
+    time.sleep(60)
+'''
