@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+
+<meta charset='utf-8' />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
+<title>AskDjango</title>
+
+</head>
+<body>
+    <h1 style='text-align:center'> 가장 저렴하게 살 수 있는 마트 </h1>  <br><br><br>
+    <p align=center> 당신은
+    {% for checking in checkings %}
+      {{checking}},
+    {% endfor %}
+     를 선택하셨습니다.</p>
+     <h3><p align=center> 당신이 선택한 품목들을 구매하 신다면 "<em>
+    {% for mart in marts %}
+          {{mart}}
+     {% endfor %}
+    </em> " 를 추천 드립니다.</p></h3>
+
+</body>
+</html>

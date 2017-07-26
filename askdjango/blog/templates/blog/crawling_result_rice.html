@@ -13,11 +13,14 @@
 
 <p><h3>이마트 쌀 물품 목록 주기적으로 받아오기</h3></p><br><br>
 
+
+
 -------------------------------
        
   
 <br><br>
-{% for emart in emarts %}
+<h2> 이마트에서 최저가 3가지</h2>
+{% for crawling_E in crawlings_E %}
          <div  > 
           <table border='1'>
             <tr>
@@ -26,11 +29,33 @@
                
             </tr>
             <tr>  
-                <td>{{ emart.title }} </td>
-                <td>{{ emart.price }} 원</td>
+                <td>{{ crawling_E.title }} </td>
+                <td>{{ crawling_E.price }} 원</td>
             </tr>
           </table>
          </div>
+{% endfor %}
+<br><br>
+
+------------------------------------------------
+
+<h2> 롯데마트에서 최저가 3가지</h2>
+
+{% for crawling_L in crawlings_L %}
+         <div  > 
+          <table border='1'>
+            <tr>
+                <th> 쌀 이름 </th>
+                <th> 가격    </th>
+               
+            </tr>
+            <tr>  
+                <td>{{ crawling_L.title }} </td>
+                <td>{{ crawling_L.price }} 원</td>
+            </tr>
+          </table>
+         </div>
+
 {% endfor %}
 ------------------------------------------------
        

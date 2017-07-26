@@ -1,0 +1,175 @@
+ <!doctype html>
+<html>
+<head>
+<meta charset='utf-8' />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
+<title>AskDjango</title>
+
+
+
+</head>
+<body>
+<br><br><br><br><br>
+<h1 style='text-align:center'>검색 결과</h1>  <br><br><br>
+
+
+<p>You searched for: <strong>{{ query }}</strong></p>
+
+{% if handling2s_rice %}
+     <h1>이마트</h1>
+    <p>검색결과: {{ handling2s_rice|length }} <br><br>
+    <h1><div align=center> 쌀 DB에서!!</div></h1>
+    {% for handling2s_rice in handling2s_rice %}
+        
+         <div > 
+          <table border='1'>
+            <tr>
+                <th> 이름 </th>
+                <th> 가격    </th>               
+            </tr>
+            <tr>  
+                <td>{{ handling2s_rice.title1 }} </td>
+                <td>{{ handling2s_rice.min_order1 }} 원</td>
+            </tr>
+          </table>
+         </div>
+     {% endfor %}
+{% else %}
+    <p>일치하는 검색결과가 없습니다.</p>
+{% endif %}
+{% if handling3s_rice %}
+   <h1>롯데마트</h1>
+    <p>검색결과: {{ handling3s_rice|length }} <br><br>
+    <h1><div align=center> 쌀 DB에서!!!</div></h1>
+    {% for handling3s_rice in handling3s_rice %}
+      
+         <div > 
+          <table border='1'>
+            <tr>
+                <th> 이름 </th>
+                <th> 가격    </th>
+               
+            </tr>
+            <tr>  
+                <td>{{ handling3s_rice.title1 }} </td>
+                <td>{{ handling3s_rice.min_order1 }} 원</td>
+            </tr>
+          </table>
+         </div>
+
+         
+{% endfor %}
+           
+{% else %}
+    <p>일치하는 검색결과가 없습니다.</p>
+{% endif %}
+
+{% if handling2s_water %}
+     <h1>이마트</h1>
+    <p>검색결과: {{ handling2s_water|length }} <br><br>
+    <h1><div align=center> 물 DB에서!!</div></h1>
+    {% for handling2s_water in handling2s_water %}
+        
+         <div > 
+          <table border='1'>
+            <tr>
+                <th> 이름 </th>
+                <th> 가격    </th>               
+            </tr>
+            <tr>  
+                <td>{{ handling2s_water.title2}} </td>
+                <td>{{ handling2s_water.min_order2 }} 원</td>
+            </tr>
+          </table>
+         </div>
+     {% endfor %}
+{% else %}
+    <p>일치하는 검색결과가 없습니다.</p>
+{% endif %}
+{% if handling3s_water %}
+   <h1>롯데마트</h1>
+    <p>검색결과: {{ handling3s_water|length }} <br><br>
+    <h1><div align=center> 물 DB에서!!</div></h1>
+    {% for handling3s_water in handling3s_water %}
+      
+         <div > 
+          <table border='1'>
+            <tr>
+                <th> 이름 </th>
+                <th> 가격    </th>
+               
+            </tr>
+            <tr>  
+                <td>{{ handling3s_water.title2 }} </td>
+                <td>{{ handling3s_water.min_order2 }} 원</td>
+            </tr>
+          </table>
+         </div>
+
+         
+{% endfor %}
+           
+{% else %}
+    <p>일치하는 검색결과가 없습니다.</p>
+{% endif %}
+
+{% if handling2s_tissue %}
+     <h1>이마트</h1>
+    <p>검색결과: {{ handling2s_tissue|length }} <br><br>
+    <h1><div align=center> 휴지 DB에서!!</div></h1>
+    {% for handling2s_tissue in handling2s_tissue %}
+        
+         <div > 
+          <table border='1'>
+            <tr>
+                <th> 이름 </th>
+                <th> 가격    </th>               
+            </tr>
+            <tr>  
+                <td>{{ handling2s_tissue.title3 }} </td>
+                <td>{{ handling2s_tissue.min_order3 }} 원</td>
+            </tr>
+          </table>
+         </div>
+     {% endfor %}
+{% else %}
+    <p>일치하는 검색결과가 없습니다.</p>
+{% endif %}
+{% if handling3s_tissue %}
+   <h1>롯데마트</h1>
+    <p>검색결과: {{ handling3s_tissue|length }} <br><br>
+    <h1><div align=center> 휴지 DB에서!!</div></h1>
+    {% for handling3s_tissue in handling3s_tissue %}
+      
+         <div > 
+          <table border='1'>
+            <tr>
+                <th> 이름 </th>
+                <th> 가격    </th>
+               
+            </tr>
+            <tr>  
+                <td>{{ handling3s_tissue.title3 }} </td>
+                <td>{{ handling3s_tissue.min_order3 }} 원</td>
+            </tr>
+          </table>
+         </div>
+
+         
+{% endfor %}
+           
+{% else %}
+    <p>일치하는 검색결과가 없습니다.</p>
+{% endif %}
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+         
+</body>
+</html>
