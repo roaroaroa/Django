@@ -13,11 +13,16 @@ from blog.models import Water_E
 from blog.models import Water_L
 from blog.models import Tissue_E
 from blog.models import Tissue_L
-
+#form
 from .forms import PostForm
 from .forms import CheckForm
 from .models import Post
 from .models import Check
+#그래프보여주기
+import matplotlib as mpl
+import matplotlib.pylab as plt 
+from pylab import savefig
+import numpy as np
 
 
 def post_list(request):
@@ -39,8 +44,6 @@ def handling(request):
     context = {'handlings': handlings}
     return render(request, 'blog/handling.html',context)
 
-def factor(request):
-    return render(request, 'blog/factor.html')
 
 def select(request):
     return render(request, 'blog/select.html')
@@ -149,8 +152,8 @@ def recommend_result(request):
     return render(request, 'blog/recommend_result.html')
 
 # recommend 함수에서 전달 받은 키 값을 가지고 최저가 계산 후, 마트를 추천해주는 함수
-def comparing(a):
-    re = Rice_E.objects.all().order_by('price')[:1]
+def comparing(a):# 여기서 a는 사용자가 체크박스에서 선택한, 값이 TRUE인 튜플
+    re = Rice_E.objects.all().order_by('price')[:1] # 쌀 품목들의 최저가만
     we = Water_E.objects.all().order_by('price')[:1]
     te = Tissue_E.objects.all().order_by('price')[:1]
     rl = Rice_L.objects.all().order_by('price')[:1]
@@ -158,7 +161,15 @@ def comparing(a):
     tl = Tissue_L.objects.all().order_by('price')[:1]
     sum_E=0
     sum_L=0
-    
+
+    sum_E += min_value_E(a,re,'rice') # a 안에 rice가 있는지 확인하고 , 이마트 쌀의 최저가 산출
+    sum_E += min_value_E(a,we,'water')
+    sum_E += min_value_E(a,te,'tissue')
+    sum_L += min_value_L(a,rl,'rice') 
+    sum_L += min_value_L(a,wl,'water')
+    sum_L += min_value_L(a,tl,'tissue') #여기가 까지 계산하면, 사용자가 체크박스에서 선택한 값들의 최저가 합이
+                                        #smu_E와 sum_L에 들어간다.
+    '''
     for x in range(len(a)):
       if str(a[x])=='rice':
            sum_E += int(re[0].price)
@@ -169,11 +180,75 @@ def comparing(a):
       if str(a[x])=='tissue':
            sum_E += int(te[0].price)
            sum_L += int(tl[0].price)
+    '''
     
     if sum_E > sum_L:
         return 'emart'
     else:
         return 'lotte_mart'
+#최저가 계산 //a안에 들어있는 true 값들을 계속 비교하여 같은 것만, 총 가격 합산
+def min_value_E(a,b,c):
+    sum_E=0
+    for x in range(len(a)):
+        if str(a[x]) ==c:
+            sum_E += int(b[0].price)
+    return sum_E
+            
+def min_value_L(a,b,c):
+    sum_L=0
+    for x in range(len(a)):
+        if str(a[x]) ==c:
+            sum_L += int(b[0].price)
+    return sum_L
+    
+            
+#자취생 지수 구하는 함수
+def factor(request):
+    re = Rice_E.objects.all()
+    we = Water_E.objects.all()
+    te = Tissue_E.objects.all()
+    rl = Rice_L.objects.all()
+    wl = Water_L.objects.all()
+    tl = Tissue_L.objects.all()
+
+    rice_factor_E =factoring(re)
+    water_factor_E =factoring(we)
+    tissue_factor_E =factoring(te)
+    rice_factor_L =factoring(rl)
+    water_factor_L =factoring(wl)
+    tissue_factor_L =factoring(tl)
+
+    # 각 이마트의 자취생 지수 구하기 가중치는 임의로 선정 (ex)쌀 40, 물 40 휴지 20)
+    emart_factors = ((rice_factor_E *40) + (water_factor_E *40) + (tissue_factor_E*20)) / 100
+    lotte_factors = ((rice_factor_L *40) + (water_factor_L *40) + (tissue_factor_L*20)) / 100
+    
+   # 오늘의 자취생 지수는 가중치 없이 평균으로 계산
+    today_factors = (emart_factors+lotte_factors)/2
+
+    #자취생 지수를 그래프로 보여주기
+    y = [100,120,120,115,100]  # fake 데이터
+    y.append(today_factors)
+    
+    x = np.arange(len(y))
+    plt.plot(y)
+    xlabel = ['7/27', '7/28', '7/29', '7/30', '7/31', '8/1']
+    plt.xticks(x, xlabel)
+    
+    plt.savefig('C:/Users/sec/Desktop/github/Django/askdjango/blog/static/img/test.png')
+    
+
+
+    return render(request, 'blog/factor.html', {'emart_factors':emart_factors, 
+                                                'lotte_factors':lotte_factors, 'today_factors':today_factors })
+
+# 마트별 각 품목의 지수 구하는 함수
+def factoring(a):
+    sum = 0
+    for x in range(len(a)):
+        sum += int(a[x].price)
+        average = sum/len(a)
+        factor = ((average+10000)/average)*100   # 일단 전날 대비 평균가 만원 올랐다 가정
+    return factor
         
 
 

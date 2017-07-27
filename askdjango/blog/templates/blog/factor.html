@@ -1,6 +1,7 @@
 
 <!doctype html>
 <html>
+    {% load staticfiles %}
 <head>
 <meta charset='utf-8' />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
@@ -10,14 +11,31 @@
 </head>
 <body>
 
+ <h1 style='text-align:center'> 자취생 지수 </h1>  <br><br><br>
 
-<h1> 자취생 지수</h1>
+<div>
+    
+    <img class="img-responsive" src="{% static 'img/test.png'%}" alt="" align=right>
+    <h3><p align=center> 이마트의 자취생 지수는  "<em>
+        {% if emart_factors %}
+            {{emart_factors}}
+        {% endif %}
+      </em> "  입니다 .</p></h3>
+<div>
+<br><br>
 
-<h3> 아직 준비중입니다....</h3>
+<h3><p align=center> 롯데마트의 자취생 지수는  "<em>
+    {% if lotte_factors %}
+          {{lotte_factors}}
+     {% endif %}
+    </em> "  입니다 .</p></h3>
+<br><br>
+<h3><p align=center> 이를 종합한 오늘의 자취생 지수는  "<em>
+    {% if today_factors %}
+          {{today_factors}}
+     {% endif %}
+    </em> "  입니다 .</p></h3>
 
 
-
-
-        
 </body>
 </html>
