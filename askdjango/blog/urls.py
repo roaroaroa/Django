@@ -4,18 +4,23 @@ from . import views
 
 urlpatterns=[
     url(r'^$', views.index),
-    url(r'^post_list$', views.post_list ),
-    url(r'^handling$', views.handling),
     url(r'^factor$',views.factor),
     url(r'^select/$', views.select), #'/' 의 유무??
-    url(r'^writing$', views.writing),
+    url(r'^writing/$', views.writing),
     url(r'^search/$', views.search),
-    url(r'^crawling_result_rice/$', views.crawling_result_rice),
-    url(r'^crawling_result_water/$', views.crawling_result_water),
-    url(r'^crawling_result_tissue/$', views.crawling_result_tissue),
-    url(r'^new/$', views.post_new),
+    url(r'^crawling_result/$', views.crawling_result),
+    url(r'^new/$', views.post_new), #건의사항
     url(r'^recommend/$', views.recommend),
     url(r'^recommend_result/$', views.recommend_result),
+    url(r'^board/$', views.board),
+    url(r'^board_writing_form/$', views.board_writing_form),
+    url(r'^viewboard/$', views.viewboard),
+    url(r'^listPageWork/$', views.listPageWork), #자유게시판 [1],[2].. 
+    url(r'^listPageWork1/$', views.listPageWork1), #검색한 결과의 페이지에서 [1],[2]..
+    url(r'^searchWithSubject/$', views.searchWithSubject),
+
+
+    
   
    
 ]

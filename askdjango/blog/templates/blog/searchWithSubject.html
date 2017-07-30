@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='utf-8' />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
+<title>AskDjango</title>
+
+
+</head>
+<body>
+<br><br><br>
+<h1 align= center>검색한 글 목록</h1>  
+<p align= center>You searched for: <strong>{{ query }}</strong></p>
+
+ <table cellspacing=20 width=700 border=0 align=center>
+       <tr>
+           <td>총 게시물 수 :{{totalCnt}} </td>
+           <td><p align=right> 페이지:{{current_page}}</td>
+       </tr>
+    </table>
+
+    <table cellsapcing=1 width=700 border=1 align=center>
+        <tr>
+            <td width=50><p align=center>번호</p></td>
+            <td width=100><p align=center>이름</p></td>
+            <td width=320><p align=center>제목</p></td>
+            <td width=100><p align=center>등록일<p></td>
+            <td width=100><p align=center>조회수<p></td>
+        </tr>
+        {% if boards %}
+           <ul>
+               {% for board in boards%}
+               <tr>
+               <td width=50><p align=center> {{board.id}}</p></td>
+               <td width=100><p align=center>{{board.name}}</p></td>
+               <td width=320><p align=center> 
+                 <a href="../viewboard?memo_id={{ board.id }}&current_page={{ current_page }}&searchStr=None" title="{{ board.memo}}">{{ board.subject }}
+                   </p></td>
+                <td width=100><p align=center>{{board.created_date}}</p></td>
+                <td width=100><p align=center>{{board.hits}}</p></td>
+               </tr>
+               {%endfor%}
+            </ul>
+        {%else%}
+            <p align=center> 검색 결과가 없습니다.</p>
+        {%endif%}
+    </table>
+
+    <table cellspacing=1 width=700 border=1 align=center>
+        <tr>
+            <td>
+             {% for page in totalPageList %}
+               <a href="../listPageWork1?current_page={{page}}&searchStr={{query}}">
+               [
+               {%ifequal page current_page%}
+               <b>
+               {%endifequal%}
+               {{page}}
+               {% ifequal page current_page%}
+               </b>
+               {%endifequal%}
+               ]
+              {%endfor%}
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

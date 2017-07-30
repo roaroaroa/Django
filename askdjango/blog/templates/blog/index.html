@@ -69,11 +69,12 @@
             <div class="col-md-3">
                 <p class="lead">한이음 프로젝트</p>
                 <div class="list-group">
-                    <a href="factor" class="list-group-item active">자취생 지수</a>
-                    <a href="handling" class="list-group-item">오늘의 가격</a>
-                    <a href="post_list" class="list-group-item">오늘의 물품</a>
-                    <a href="select" class="list-group-item">검색하기</a>
-                    <a href="recommend" class="list-group-item">추천받기</a>
+                    <a href="factor" class="list-group-item">자취생 지수</a>
+                   <!--  <a href="handling" class="list-group-item">오늘의 가격</a>
+                    <a href="post_list" class="list-group-item">오늘의 물품</a> -->
+                    <a href="select" class="list-group-item">물품검색하기/건의하기</a>
+                    <a href="recommend" class="list-group-item">최저가 마트 추천받기</a>
+                    <a href="board" class="list-group-item">자유게시판</a>
                 </div>
             </div>
 
@@ -102,55 +103,30 @@
                 </div>
 
                 <div class="well">
-
+                    <form action="" method="POST">
                     <div class="text-right">
-                        <a class="btn btn-success">Leave a Review</a>
+                        <input type="submit" value="Leave a Review"/>
                     </div>
 
                     <hr>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                            정승환
-                            <span class="pull-right">10 days ago</span>
-                            <p>안녕하세요!</p>
-                        </div>
+                    <div class='commnet'>
+                           {%csrf_token%}
+                            <table>
+                            {{form.as_table}}
+                            </table>
+                         
+                        </form>
+                        <br><br>
                     </div>
-
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                            김지훈
-                            <span class="pull-right">12 days ago</span>
-                            <p>안녕하세요!</p>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                            홍순현
-                            <span class="pull-right">15 days ago</span>
-                            <p>안녕하세요!.</p>
-                        </div>
-                    </div>
+                    <ul>
+                      <div class="comment">
+                        
+                         {% for comment in comments %}
+                          <li> {{comment.content}}</li>
+                            <br> {{comment.name}}<br><br>
+                         {%endfor%}
+                    </ul>
+                       </div>
 
                 </div>
 

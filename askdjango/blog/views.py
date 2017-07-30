@@ -1,12 +1,9 @@
 from django.shortcuts import render,redirect
 from django.shortcuts import render_to_response
-
+from django.db.models import Q
+from datetime import datetime
 from django.http import HttpResponse
-from blog.models import Scrapping
-from blog.models import Emart
-from blog.models import Handling
-from blog.models import Handling2
-from blog.models import Handling3
+#크롤링 
 from blog.models import Rice_E
 from blog.models import Rice_L
 from blog.models import Water_E
@@ -18,31 +15,38 @@ from .forms import PostForm
 from .forms import CheckForm
 from .models import Post
 from .models import Check
+from .forms import CommentForm
+from .models import Comment
+from .models import Board
+from .forms import BoardForm
 #그래프보여주기
 import matplotlib as mpl
 import matplotlib.pylab as plt 
 from pylab import savefig
 import numpy as np
-
-
-def post_list(request):
-    
-    # pylint: disable=E1101
-    #scrappings = Scrapping.objects.all()
-    emarts = Emart.objects.all()
-    #context = {'scrappings' : scrappings }
-    context = {'emarts' : emarts}
-    return render(request, 'blog/post_list.html', context) 
-
+#mysql 길이 산출 함수
+from django.db.models.functions import Length
+ 
+ 
+#메인 
 def index(request):
-    return render(request, 'blog/index.html')
-
-def handling(request):
+    #댓글 기능
+    if request.method =='POST':
+        form=CommentForm(request.POST)
+        if form.is_valid():
+            comment =Comment()
+            comment.name=form.cleaned_data['name']
+            comment.content=form.cleaned_data['content']
+            comment.save()
+        else:
+            form.errors
+        return redirect('/blog/')
+    else:
+        form =CommentForm()
     
-    # pylint: disable=E1101
-    handlings = Handling.objects.all()
-    context = {'handlings': handlings}
-    return render(request, 'blog/handling.html',context)
+    comments= Comment.objects.all()
+    return render(request, 'blog/index.html' , {'form': form, 'comments': comments} )
+
 
 
 def select(request):
@@ -50,19 +54,19 @@ def select(request):
 
 def writing(request):
     return render(request, 'blog/writing.html')
-
+#검색하기 
 def search(request):
     if 'q' in request.GET and request.GET['q']:
         q = request.GET['q']
         # pylint: disable=E1101
-        handling2s_rice = Handling2.objects.filter(title1__icontains=q)
-        handling3s_rice = Handling3.objects.filter(title1__icontains=q)
+        handling2s_rice = Rice_E.objects.filter(title__icontains=q)
+        handling3s_rice = Rice_L.objects.filter(title__icontains=q)
 
-        handling2s_water = Handling2.objects.filter(title2__icontains=q)
-        handling3s_water = Handling3.objects.filter(title2__icontains=q)
+        handling2s_water = Water_E.objects.filter(title__icontains=q)
+        handling3s_water = Water_L.objects.filter(title__icontains=q)
 
-        handling2s_tissue = Handling2.objects.filter(title3__icontains=q)
-        handling3s_tissue = Handling3.objects.filter(title3__icontains=q)
+        handling2s_tissue = Tissue_E.objects.filter(title__icontains=q)
+        handling3s_tissue = Tissue_L.objects.filter(title__icontains=q)
         return render_to_response('blog/search.html',
             {'handling2s_rice': handling2s_rice, 'handling3s_rice': handling3s_rice, 
             'handling2s_water': handling2s_water, 'handling3s_water': handling3s_water,
@@ -70,28 +74,28 @@ def search(request):
             'query': q})
     else:
         return HttpResponse('Please submit a search term.')
+#각 마트의 최저가 3가지를 보여주는 함수
+def crawling_result(request):
+    title= request.GET['title']
+    if title == 'rice':
+      # pylint: disable=E1101
+       crawlings_E=Rice_E.objects.all().order_by(Length('price'),'price')[:3]#price를 1,11,12,순서가 아니라 ,1,2,3 숫자정렬하기
+       crawlings_L=Rice_L.objects.all().order_by(Length('price'),'price')[:3]
+       context={'crawlings_E': crawlings_E, 'crawlings_L': crawlings_L}
+       return render(request, 'blog/crawling_result.html',context)
+      
+    elif title =='water':
+       crawlings_E=Water_E.objects.all().order_by(Length('price'),'price')[:3]
+       crawlings_L=Water_L.objects.all().order_by(Length('price'),'price')[:3]
+       context={'crawlings_E': crawlings_E, 'crawlings_L': crawlings_L}
+       return render(request, 'blog/crawling_result.html',context)
 
-def crawling_result_rice(request):
-     # pylint: disable=E1101
-    crawlings_E=Rice_E.objects.all().order_by('price')[:3]
-    crawlings_L=Rice_L.objects.all().order_by('price')[:3]
-    context={'crawlings_E': crawlings_E, 'crawlings_L': crawlings_L}
-    return render(request, 'blog/crawling_result_rice.html',context)
-
-def crawling_result_water(request):
-     # pylint: disable=E1101
-    crawlings_E=Water_E.objects.all().order_by('price')[:3]
-    crawlings_L=Water_L.objects.all().order_by('price')[:3]
-    context={'crawlings_E': crawlings_E, 'crawlings_L': crawlings_L}
-    return render(request, 'blog/crawling_result_water.html',context)
-
-def crawling_result_tissue(request):
-     # pylint: disable=E1101
-    crawlings_E=Tissue_E.objects.all().order_by('price')[:3]
-    crawlings_L=Tissue_L.objects.all().order_by('price')[:3]
-    context={'crawlings_E': crawlings_E, 'crawlings_L': crawlings_L}
-    return render(request, 'blog/crawling_result_tissue.html',context)
-
+    elif title =='tissue':
+       crawlings_E=Tissue_E.objects.all().order_by(Length('price'),'price')[:3]
+       crawlings_L=Tissue_L.objects.all().order_by(Length('price'),'price')[:3]
+       context={'crawlings_E': crawlings_E, 'crawlings_L': crawlings_L}
+       return render(request, 'blog/crawling_result.html',context)
+#건의사항 접수
 def post_new(request):
     if request.method =='POST':
         form = PostForm(request.POST, request.FILES)
@@ -121,7 +125,7 @@ def post_new(request):
     else:
         form =PostForm()
     return render(request, 'blog/writing.html', {'form': form}, )
-
+#추천하기 함수
 def recommend(request):
     if request.method =='POST':
         form = CheckForm(request.POST, request.FILES)
@@ -153,12 +157,12 @@ def recommend_result(request):
 
 # recommend 함수에서 전달 받은 키 값을 가지고 최저가 계산 후, 마트를 추천해주는 함수
 def comparing(a):# 여기서 a는 사용자가 체크박스에서 선택한, 값이 TRUE인 튜플
-    re = Rice_E.objects.all().order_by('price')[:1] # 쌀 품목들의 최저가만
-    we = Water_E.objects.all().order_by('price')[:1]
-    te = Tissue_E.objects.all().order_by('price')[:1]
-    rl = Rice_L.objects.all().order_by('price')[:1]
-    wl = Water_L.objects.all().order_by('price')[:1]
-    tl = Tissue_L.objects.all().order_by('price')[:1]
+    re = Rice_E.objects.all().order_by(Length('price'),'price')[:1] # 쌀 품목들의 최저가만
+    we = Water_E.objects.all().order_by(Length('price'),'price')[:1]
+    te = Tissue_E.objects.all().order_by(Length('price'),'price')[:1]
+    rl = Rice_L.objects.all().order_by(Length('price'),'price')[:1]
+    wl = Water_L.objects.all().order_by(Length('price'),'price')[:1]
+    tl = Tissue_L.objects.all().order_by(Length('price'),'price')[:1]
     sum_E=0
     sum_L=0
 
@@ -249,6 +253,126 @@ def factoring(a):
         average = sum/len(a)
         factor = ((average+10000)/average)*100   # 일단 전날 대비 평균가 만원 올랐다 가정
     return factor
+
+
+# 게시판 함수
+rowsPerPage = 3
+view_number= 3  # 게시판에 보여지는 글 목록의 숫자
+def board(request):
+    boards=Board.objects.all().order_by('-id')[0:view_number]
+    current_page=1
+    totalCnt =Board.objects.all().count()
+
+    pagingHelperIns = pagingHelper()
+    totalPageList = pagingHelperIns.getTotalPageList( totalCnt, rowsPerPage)
+
+    content={'current_page': current_page, 'totalCnt': totalCnt, 'boards': boards,'totalPageList':totalPageList }
+    return render(request, 'blog/board.html',content)
+#게시판 목록넘기기 [1],[2],[3]..함수
+def listPageWork(request):
+    page= request.GET['current_page']
+    current_page = page
+    a=view_number*int(page) # 게시물의 총 개수 // str , int 조심
+    b= (a-3)
+    boards=Board.objects.all().order_by('-id')[b:a] # 보여주는 게시물 수를 3개로 계속 조절
+    totalCnt =Board.objects.all().count()
+    pagingHelperIns = pagingHelper()
+    totalPageList = pagingHelperIns.getTotalPageList( totalCnt, rowsPerPage)
+
+    content={'current_page': current_page, 'totalCnt': totalCnt, 'boards': boards,'totalPageList':totalPageList }
+    return render(request, 'blog/board.html',content)
+
+
+#paging class 보여주는 페이지 조절하는 함수를 담은 클래스
+class pagingHelper:
+    
+    def getTotalPageList(self, total_cnt, rowPerPage):
+        if ((total_cnt % rowsPerPage)==0):
+            self.total_pages =total_cnt /rowsPerPage
+        else:
+            self.total_pages =(total_cnt /rowsPerPage)+1
+        
+        self.totalPageList=[]
+        for j in range(int(self.total_pages)):
+            self.totalPageList.append(j+1)
+        return self.totalPageList
+
+    def __init__(self):
+        self.total_pages=0
+        self.totalPageList=0    
+
+#게시판 글쓰기 함수
+def board_writing_form (request):
+     if request.method =='POST':
+        form=BoardForm(request.POST)
+        if form.is_valid():
+            board =Board()
+            board.subject = form.cleaned_data['subject']
+            board.name = form.cleaned_data['name']
+            board.memo = form.cleaned_data['memo']
+            now =datetime.today().strftime('%Y-%m-%d')  # 모델 의 형식에 맞춰서 넣어야 한다.
+            board.created_date =now #입력시간 자동 입력
+            board.save()
+        else:
+            form.errors
+        return redirect('/blog/board/')
+     else:
+        form =BoardForm()
+     return render(request, 'blog/board_writing_form.html' ,{'form': form},)    
+#게시판 글보기
+def viewboard(request):
+    pk= request.GET['memo_id']
+    boardData = Board.objects.get(id=pk)
+    Board.objects.filter(id=pk).update(hits = int(boardData.hits) + 1) #조회수 늘리기
+    form =BoardForm()
+    
+    return render(request, 'blog/viewboard.html', {'memo_id': request.GET['memo_id'],
+                                                'current_page':request.GET['current_page'],
+                                                'searchStr': request.GET['searchStr'],
+                                                'boardData': boardData, 'form': form } )
+#게시판 검색결과 보여주기 함수
+def  searchWithSubject(request):
+    if 'searchStr' in request.GET and request.GET['searchStr']:
+        searchStr = request.GET['searchStr']
+        boards=Board.objects.filter(Q(subject__icontains=searchStr) | Q(name__icontains=searchStr ) |Q(memo__icontains=searchStr))
+        totalCnt =boards.count()
+        boards=boards.order_by('-id')[0:view_number] #[0:3]
+        current_page=1
+        pagingHelperIns = pagingHelper()
+        totalPageList = pagingHelperIns.getTotalPageList( totalCnt, rowsPerPage)
+
+        content = {'current_page': current_page, 'totalCnt': totalCnt, 'boards': boards,'totalPageList':totalPageList,'query': searchStr }
+    else: 
+          return HttpResponse('Please submit a search term.')
+        
+    return render(request, 'blog/searchWithSubject.html',content)
+
+# 검색결과페이지에서 [1],[2],[3] 넘기기 함수
+def listPageWork1(request):
+    page= request.GET['current_page']
+    searchStr= request.GET['searchStr']
+    current_page = page
+    a=view_number*int(page) # 게시물의 총 개수 // str , int 조심
+    b= (a-3)
+    boards=Board.objects.filter(Q(subject__icontains=searchStr) | Q(name__icontains=searchStr ) | Q(memo__icontains=searchStr))
+    totalCnt =boards.count()
+    boards=boards.order_by('-id')[b:a]
+    
+    pagingHelperIns = pagingHelper()
+    totalPageList = pagingHelperIns.getTotalPageList( totalCnt, rowsPerPage)
+    
+
+    content={'current_page': current_page, 'totalCnt': totalCnt, 'boards': boards,'totalPageList':totalPageList ,'query': searchStr } #query리를 보내주는 것
+    return render(request, 'blog/searchWithSubject.html',content)
+
+    
+    
+    
+
+
+
+
+         
         
 
 
